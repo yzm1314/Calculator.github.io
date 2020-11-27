@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="css/Style-hezi.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js/js-Yangshi.js"></script>
+</head>
+<body>
+    <div id="JSQ" class="JSQ">
+        <input id="btn11" class="XianShi" type="text" value="0" disabled>
+        <ul class="footrLi">
+            <li><input class="btn"  type="button" value="C"></li>
+            <li><input class="btn"  type="button" value="+/-"></li>
+            <li><input class="btn"  type="button" value="<-"></li>
+            <li><input class="btn"  type="button" value="/" style="background-color: #63c4f1;color: white"></li>
+            <li><input class="btn"  type="button" value="7"></li>
+            <li><input class="btn"  type="button" value="8"></li>
+            <li><input class="btn"  type="button" value="9"></li>
+            <li><input class="btn"  type="button" value="*" style="background-color: #63c4f1;color: white"></li>
+            <li><input class="btn"  type="button" value="4"></li>
+            <li><input class="btn"  type="button" value="5"></li>
+            <li><input class="btn"  type="button" value="6"></li>
+            <li><input class="btn"  type="button" value="-" style="background-color: #63c4f1;color: white"></li>
+            <li><input class="btn"  type="button" value="1"></li>
+            <li><input class="btn"  type="button" value="2"></li>
+            <li><input class="btn"  type="button" value="3"></li>
+            <li><input class="btn" type="button" value="+" style="background-color: #63c4f1;color: white"></li>
+            <li><input class="btn" type="button" value="0"></li>
+            <li><input class="btn" type="button" value="."></li>
+            <li><input class="btn" type="button" value="=" style="width: 150px;background-color: #63c4f1;color: white"></li>
+        </ul>
+    </div>
+    <script>
+
+        // 页面加载完
+       window.onload = function () {
+
+           function add(s){
+               var l = XS.value.substr(XS.value.length - 1,1);//获取最后一位
+               if(l != s){
+                   //表示输入的值不相等
+                   if((l >= '0' && l <= '9') || l == ")"){
+                       //最后为数字时
+                       XS.value += s;
+                   }
+                   if (l == '-' || l == '*' || l == '+' || l == '/'){
+                       //最后只要是运算符，都变为相应的运算符
+                       XS.value =  XS.value.substr(0,XS.value.length - 1)+s;
+                   }
+               }
+           }
+
+
+           var btns = document.getElementsByClassName("btn");
+           var XS = document.getElementById("btn11");
+           for (var i = 0; i < btns.length; i++) {
+               btns[i].onclick = function () {
+                   if(this.value == 'C'){
+                       XS.value = "0";
+                   }else if(this.value == "+/-") {
+                       if (XS.value == '0') {
+                           alert("请先输入数字!");
+                       }else {
+                           var SXs = XS.value.split(/\+|\*|-|\//);
+                           var n = SXs[SXs.length - 1];//获取最后一个符号后的数字
+                           var o = XS.value.substr(0,XS.value.length - n.length);//前一部分
+                           var x = XS.value.substr(-n.length,n.length);//获取最后一个数字
+
+                           var l = XS.value.substr(XS.value.length - 1,1);//获取最后一位
+                           if (l >= "0" && l <= "9"){
+                               //最后一位是数字可以进行操作
+                               XS.value = o+"("+(-x)+")";
+                           }else {
+                               //不是数字，都是错误的操作
+                               alert("错误操作！");
+                           }
+
+                       }
+                   }else if(this.value == "<-"){
+                       if (XS.value == "0"){
+                       }else {
+                           //删除末尾数字
+                           XS.value = XS.value.substr(0,XS.value.length - 1);
+                           if (XS.value == ''){
+                               XS.value = "0";
+                           }
+                       }
+                   }else if (this.value == "/"){
+                       add("/");
+                   }else if(this.value == "*"){
+                       add("*");
+                   }else if(this.value == "-"){
+                       add("-");
+                   }else if(this.value == "+"){
+                       add("+");
+                   }else if (this.value == '1'
+                              || this.value =='2'
+                              || this.value =='3'
+                              || this.value =='4'
+                              || this.value =='5'
+                              || this.value =='6'
+                              || this.value =='7'
+                              || this.value =='8'
+                              || this.value =='9'
+                              || this.value =='0'
+                   ){
+                       if (XS.value == "0" && XS.value.length == 1){
+                           //第一次输入，如果初始值是0，就直接复制给它；
+                           XS.value = this.value;
+                       }else {
+
+                           //否则赋值给它
+                           var l = XS.value.substr(XS.value.length - 1,1);//获取最后一位
+                           if (l == '/' && this.value == "0"){
+                               //如果输入的是0，而最后一位又是/,提示除数不能为0；
+                               alert("除数不能为0");
+                           }
+
+                           if( l != ")"){
+                               XS.value += this.value;
+                           }
+
+                       }
+
+                   }else if(this.value == "."){
+
+                       var l = XS.value.substr(XS.value.length - 1,1);//获取最后一位
+                       if(l >='0' && l <= '9'){
+
+                           //只有是数字才会输入
+                           var q = XS.value.split(/\+|\*|-|\//);
+                           //遍历切割后的最后一个数组元素
+                           var M = q[q.length -1].length;//最后一个数组元素长度
+                           var sum = 0;//其中最后一个数组元素的据点（.）的个数；
+                           for (var j = 0; j < M; j++) {
+
+                               var c = q[q.length -1].indexOf(".",j);
+                               if(c != -1){
+                                   sum++;
+                                   j = c + 1;
+                               }
+                           }
+
+                           if (sum == 0){
+                               XS.value += ".";
+                           }
+                       }
+
+                   }else if (this.value == "="){
+                      XS.value = eval(XS.value);//eval方法可以让字符串算式运算
+                   }
+               }
+           }
+       }
+
+    </script>
+</body>
+</html>
